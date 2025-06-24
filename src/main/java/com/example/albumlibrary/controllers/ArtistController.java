@@ -1,9 +1,8 @@
 package com.example.albumlibrary.controllers;
 
-import com.example.albumlibrary.dtos.AlbumDto;
-import com.example.albumlibrary.dtos.ArtistDto;
+import com.example.albumlibrary.dtos.AlbumRequestDto;
+import com.example.albumlibrary.dtos.ArtistRequestDto;
 import com.example.albumlibrary.models.Artist;
-import com.example.albumlibrary.repositories.ArtistRepository;
 import com.example.albumlibrary.serivces.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +36,12 @@ public class ArtistController {
     }
 
     @PostMapping
-    public Artist addArtist(@RequestBody ArtistDto artist){
+    public Artist addArtist(@RequestBody ArtistRequestDto artist){
         return artistService.addArtist(artist);
     }
 
     @PutMapping("/{id}")
-    public Artist assignNewAlbumToArtist(@PathVariable Long id, @RequestBody AlbumDto album) throws IOException {
+    public Artist assignNewAlbumToArtist(@PathVariable Long id, @RequestBody AlbumRequestDto album) throws IOException {
         return artistService.updateArtist(id, album);
     }
 

@@ -1,17 +1,15 @@
 package com.example.albumlibrary.controllers;
 
-import com.example.albumlibrary.dtos.ReviewDto;
+import com.example.albumlibrary.dtos.AlbumRequestDto;
+import com.example.albumlibrary.dtos.AlbumResponseDto;
+import com.example.albumlibrary.dtos.ReviewRequestDto;
 import com.example.albumlibrary.models.Album;
-import com.example.albumlibrary.models.Review;
-import com.example.albumlibrary.repositories.AlbumRepository;
 import com.example.albumlibrary.serivces.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/albums")
@@ -31,7 +29,7 @@ public class AlbumController {
 
 
     @GetMapping("/{id}")
-    public Album getAlbumById(@PathVariable Long id){
+    public AlbumResponseDto getAlbumById(@PathVariable Long id){
         return albumService.getAlbumById(id);
     }
 
@@ -42,8 +40,8 @@ public class AlbumController {
 
 
     @PostMapping("/{id}/reviews")
-    public Album addReview(@RequestBody ReviewDto reviewDto,@PathVariable Long id, Principal principal){
-        return albumService.addReviewToAlbum(reviewDto, id, principal);
+    public Album addReview(@RequestBody ReviewRequestDto reviewRequestDto, @PathVariable Long id, Principal principal){
+        return albumService.addReviewToAlbum(reviewRequestDto, id, principal);
     }
 
 }

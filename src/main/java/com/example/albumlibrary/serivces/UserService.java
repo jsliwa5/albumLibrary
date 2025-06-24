@@ -1,12 +1,10 @@
 package com.example.albumlibrary.serivces;
 
-import com.example.albumlibrary.dtos.UserDto;
+import com.example.albumlibrary.dtos.UserRequestDto;
 import com.example.albumlibrary.models.UserEntity;
 import com.example.albumlibrary.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -44,10 +42,10 @@ public class UserService implements UserDetailsService {
                 List.of(new SimpleGrantedAuthority("user")));
     }
 
-    public UserEntity addUser(UserDto userDto) {
+    public UserEntity addUser(UserRequestDto userRequestDto) {
         var user = new UserEntity();
-        user.setUsername(userDto.getUsername());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setUsername(userRequestDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
 
         return userRepository.save(user);
     }

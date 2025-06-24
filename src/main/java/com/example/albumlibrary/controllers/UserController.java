@@ -1,6 +1,6 @@
 package com.example.albumlibrary.controllers;
 
-import com.example.albumlibrary.dtos.UserDto;
+import com.example.albumlibrary.dtos.UserRequestDto;
 import com.example.albumlibrary.models.UserEntity;
 import com.example.albumlibrary.serivces.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +15,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserEntity register(@RequestBody UserDto userDto){
-        return userService.addUser(userDto);
+    public UserEntity register(@RequestBody UserRequestDto userRequestDto){
+        return userService.addUser(userRequestDto);
     }
 
     @GetMapping("/{username}")

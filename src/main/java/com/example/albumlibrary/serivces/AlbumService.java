@@ -1,6 +1,8 @@
 package com.example.albumlibrary.serivces;
 
-import com.example.albumlibrary.dtos.ReviewDto;
+import com.example.albumlibrary.dtos.AlbumResponseDto;
+import com.example.albumlibrary.dtos.ReviewRequestDto;
+import com.example.albumlibrary.mappers.AlbumMapper;
 import com.example.albumlibrary.models.Album;
 import com.example.albumlibrary.models.Review;
 import com.example.albumlibrary.repositories.AlbumRepository;
@@ -15,20 +17,24 @@ public class AlbumService {
 
     private final AlbumRepository albumRepository;
     private final UserService userService;
+    private final AlbumMapper albumMapper;
 
-    public AlbumService(AlbumRepository albumRepository, UserService userService) {
+    public AlbumService(AlbumRepository albumRepository, UserService userService, AlbumMapper albumMapper) {
         this.albumRepository = albumRepository;
         this.userService = userService;
+        this.albumMapper = albumMapper;
     }
 
     public Album addAlbum(Album album){
         return albumRepository.save(album);
     }
 
-    public Album getAlbumById(Long id) throws RuntimeException{
+    public AlbumResponseDto getAlbumById(Long id) throws RuntimeException{
 
-        return albumRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("nie znaleziono albumu"));
+        var albumEntity = albumRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("nie znaleziono albumu"));;
+
+        return albumMapper.toDto(albumEntity);
 
     }
 
@@ -38,13 +44,13 @@ public class AlbumService {
 
 
     @Transactional
-    public Album addReviewToAlbum(ReviewDto reviewDto, Long id, Principal principal) {
+    public Album addReviewToAlbum(ReviewRequestDto reviewRequestDto, Long id, Principal principal) {
 
         var currentUser = userService.getUserByUsername(principal.getName());
         var review = new Review();
 
-        review.setRating(reviewDto.getRating());
-        review.setContent(reviewDto.getContent());
+        review.setRating(reviewRequestDto.getRating());
+        review.setContent(reviewRequestDto.getContent());
         review.setUser(currentUser);
 
         var albumToBeUpdated = albumRepository.findById(id).get();

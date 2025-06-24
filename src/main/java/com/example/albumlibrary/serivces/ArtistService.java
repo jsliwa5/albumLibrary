@@ -1,7 +1,7 @@
 package com.example.albumlibrary.serivces;
 
-import com.example.albumlibrary.dtos.AlbumDto;
-import com.example.albumlibrary.dtos.ArtistDto;
+import com.example.albumlibrary.dtos.AlbumRequestDto;
+import com.example.albumlibrary.dtos.ArtistRequestDto;
 import com.example.albumlibrary.models.Album;
 import com.example.albumlibrary.models.Artist;
 import com.example.albumlibrary.repositories.ArtistRepository;
@@ -9,11 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ArtistService {
@@ -27,7 +23,7 @@ public class ArtistService {
         this.albumService = albumService;
     }
 
-    public Artist addArtist(ArtistDto artist){
+    public Artist addArtist(ArtistRequestDto artist){
         var artistToBeSaved = new Artist();
         artistToBeSaved.setName(artist.getName());
 
@@ -39,7 +35,7 @@ public class ArtistService {
     }
 
     @Transactional
-    public Artist updateArtist(Long id, AlbumDto albumDetails) {
+    public Artist updateArtist(Long id, AlbumRequestDto albumDetails) {
 
         var artistToBeUpdated = artistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("nie znalezniono artysty"));

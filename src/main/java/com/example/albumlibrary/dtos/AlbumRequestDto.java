@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AlbumDto {
+public class AlbumRequestDto {
 
     public String name;
     public List<Artist> otherArtists;
