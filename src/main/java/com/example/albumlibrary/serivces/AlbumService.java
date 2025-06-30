@@ -2,7 +2,9 @@ package com.example.albumlibrary.serivces;
 
 import com.example.albumlibrary.dtos.AlbumResponseDto;
 import com.example.albumlibrary.dtos.ReviewRequestDto;
+import com.example.albumlibrary.dtos.ReviewResponseDto;
 import com.example.albumlibrary.mappers.AlbumMapper;
+import com.example.albumlibrary.mappers.ReviewMapper;
 import com.example.albumlibrary.models.Album;
 import com.example.albumlibrary.models.Review;
 import com.example.albumlibrary.repositories.AlbumRepository;
@@ -18,15 +20,21 @@ public class AlbumService {
     private final AlbumRepository albumRepository;
     private final UserService userService;
     private final AlbumMapper albumMapper;
+    private final ReviewMapper reviewMapper;
 
-    public AlbumService(AlbumRepository albumRepository, UserService userService, AlbumMapper albumMapper) {
+
+    public AlbumService(AlbumRepository albumRepository,
+                        UserService userService, AlbumMapper albumMapper,
+                        ReviewMapper reviewMapper) {
         this.albumRepository = albumRepository;
         this.userService = userService;
         this.albumMapper = albumMapper;
+        this.reviewMapper = reviewMapper;
     }
 
-    public Album addAlbum(Album album){
-        return albumRepository.save(album);
+    public AlbumResponseDto addAlbum(Album album){
+        var albumEntity = albumRepository.save(album);
+        return albumMapper.toDto(albumEntity);
     }
 
     public AlbumResponseDto getAlbumById(Long id) throws RuntimeException{
@@ -60,5 +68,16 @@ public class AlbumService {
 
         return albumRepository.save(albumToBeUpdated);
 
+    }
+
+    public List<ReviewResponseDto> getAllReviews(Long id){
+
+        var reviews = albumRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("nie znaleziono albumu"))
+                .getReviews();
+
+        return reviews.stream()
+                .map(reviewMapper::toDto)
+                .toList();
     }
 }

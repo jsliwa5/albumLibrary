@@ -1,5 +1,6 @@
 package com.example.albumlibrary.mappers;
 
+import com.example.albumlibrary.dtos.ReviewRequestDto;
 import com.example.albumlibrary.dtos.ReviewResponseDto;
 import com.example.albumlibrary.models.Review;
 import org.springframework.stereotype.Component;
@@ -17,11 +18,7 @@ public class ReviewMapper {
     }
 
 
-    public Review toEntity(ReviewResponseDto dto) {
-        Review review = new Review();
-        review.setReview_id(dto.getReviewId());
-        review.setRating(dto.getRating());
-        review.setContent(dto.getContent());
-        return review;
+    public Review toEntity(ReviewRequestDto dto) {
+        return null;
     }
 }

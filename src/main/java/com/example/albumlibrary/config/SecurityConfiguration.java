@@ -28,11 +28,9 @@ import java.util.List;
 @Configuration
 public class SecurityConfiguration {
 
-    UserService userService;
+    private final UserService userService;
 
-
-    @Autowired
-    public void setUserService(@Lazy UserService userService){
+    public SecurityConfiguration(@Lazy UserService userService) {
         this.userService = userService;
     }
 
@@ -40,40 +38,29 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
                         .requestMatchers("/register").permitAll()
-                .anyRequest()
-                .authenticated()
-                );
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.httpBasic(Customizer.withDefaults());
-        http.formLogin(Customizer.withDefaults());
-
+                        .anyRequest().authenticated()
+                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults());
 
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder(4);
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
-        var authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider
-                .setPasswordEncoder(NoOpPasswordEncoder.getInstance());
-
-        authenticationProvider.setUserDetailsService(userService);
-
-        return authenticationProvider;
+    public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return authProvider;
     }
-
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        return userService;
-    }
-
-
 }
+
 
 
 

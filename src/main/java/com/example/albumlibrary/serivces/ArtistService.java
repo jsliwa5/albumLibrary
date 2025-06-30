@@ -2,6 +2,8 @@ package com.example.albumlibrary.serivces;
 
 import com.example.albumlibrary.dtos.AlbumRequestDto;
 import com.example.albumlibrary.dtos.ArtistRequestDto;
+import com.example.albumlibrary.dtos.ArtistResponseDto;
+import com.example.albumlibrary.mappers.ArtistMapper;
 import com.example.albumlibrary.models.Album;
 import com.example.albumlibrary.models.Artist;
 import com.example.albumlibrary.repositories.ArtistRepository;
@@ -15,19 +17,20 @@ import java.util.List;
 public class ArtistService {
 
     private final ArtistRepository artistRepository;
-    private final AlbumService albumService;
+    private final ArtistMapper artistMapper;
 
     @Autowired
-    public ArtistService(ArtistRepository artistRepository, AlbumService albumService) {
+    public ArtistService(ArtistRepository artistRepository, ArtistMapper artistMapper) {
         this.artistRepository = artistRepository;
-        this.albumService = albumService;
+        this.artistMapper = artistMapper;
     }
 
-    public Artist addArtist(ArtistRequestDto artist){
+    public ArtistResponseDto addArtist(ArtistRequestDto artist){
         var artistToBeSaved = new Artist();
         artistToBeSaved.setName(artist.getName());
 
-        return artistRepository.save(artistToBeSaved);
+        var artistEntity = artistRepository.save(artistToBeSaved);
+        return artistMapper.toDto(artistEntity);
     }
 
     public List<Artist> getAllArtists(){
@@ -35,31 +38,25 @@ public class ArtistService {
     }
 
     @Transactional
-    public Artist updateArtist(Long id, AlbumRequestDto albumDetails) {
+    public ArtistResponseDto updateArtist(Long id, AlbumRequestDto albumDetails) {
 
         var artistToBeUpdated = artistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("nie znalezniono artysty"));
 
         var albumToBeSaved = new Album();
-
         albumToBeSaved.setName(albumDetails.getName());
-        //var album = albumService.addAlbum(albumToBeSaved);
-
         var albums = artistToBeUpdated.getAlbums();
-        albums.add(albumToBeSaved);
 
+        albums.add(albumToBeSaved);
         artistToBeUpdated.setAlbums(albums);
 
-        return artistRepository.save(artistToBeUpdated);
-
-
+        var artistEntity = artistRepository.save(artistToBeUpdated);
+        return artistMapper.toDto(artistEntity);
     }
 
-    public Artist getArtistById(Long id) {
+    public ArtistResponseDto getArtistById(Long id) {
 
-        var artist = artistRepository.findById(id).get();
-        //System.out.println(artist.getAlbums());
-
-        return artist;
+        var artistEntity = artistRepository.findById(id).get();
+        return artistMapper.toDto(artistEntity);
     }
 }

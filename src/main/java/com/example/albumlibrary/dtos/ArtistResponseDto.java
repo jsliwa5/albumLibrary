@@ -3,12 +3,9 @@ package com.example.albumlibrary.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
-public class AlbumResponseDto {
-    private long albumId;
+public class ArtistResponseDto {
+    private Long ArtistId;
     private String name;
-    private Set<ArtistResponseDto> artists;
 }

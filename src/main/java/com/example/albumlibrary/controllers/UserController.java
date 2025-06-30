@@ -24,7 +24,4 @@ public class UserController {
         return userService.getUserByUsername(username);
     }
 
-
-
-
 }

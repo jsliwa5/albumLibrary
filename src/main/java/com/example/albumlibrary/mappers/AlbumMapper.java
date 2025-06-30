@@ -2,23 +2,22 @@ package com.example.albumlibrary.mappers;
 
 import com.example.albumlibrary.dtos.AlbumRequestDto;
 import com.example.albumlibrary.dtos.AlbumResponseDto;
-import com.example.albumlibrary.dtos.ReviewResponseDto;
+import com.example.albumlibrary.dtos.ArtistResponseDto;
 import com.example.albumlibrary.models.Album;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class AlbumMapper  {
 
-    private final ReviewMapper reviewMapper;
+    private final ArtistMapper artistMapper;
 
     @Autowired
-    public AlbumMapper(ReviewMapper reviewMapper) {
-        this.reviewMapper = reviewMapper;
+    public AlbumMapper(ArtistMapper artistMapper) {
+        this.artistMapper = artistMapper;
     }
 
     public AlbumResponseDto toDto(Album entity) {
@@ -27,13 +26,13 @@ public class AlbumMapper  {
         dto.setAlbumId(entity.getAlbum_id());
         dto.setName(entity.getName());
 
-        if(entity.getReviews() != null){
-            Set<ReviewResponseDto> reviews = entity.getReviews()
+        if(entity.getArtists() != null){
+            Set<ArtistResponseDto> artists = entity.getArtists()
                     .stream()
-                    .map(reviewMapper::toDto)
+                    .map(artistMapper::toDto)
                     .collect(Collectors.toSet());
 
-            dto.setReviews(reviews);
+            dto.setArtists(artists);
         }
 
         return dto;

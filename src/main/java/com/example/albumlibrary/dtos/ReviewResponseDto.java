@@ -9,6 +9,4 @@ public class ReviewResponseDto {
     private Long reviewId;
     private int rating;
     private String content;
-
-
 }
