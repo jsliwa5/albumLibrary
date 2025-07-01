@@ -2,7 +2,6 @@ package com.example.albumlibrary.serivces;
 
 import com.example.albumlibrary.dtos.ReviewRequestDto;
 import com.example.albumlibrary.dtos.ReviewResponseDto;
-import com.example.albumlibrary.mappers.AlbumMapper;
 import com.example.albumlibrary.mappers.ReviewMapper;
 import com.example.albumlibrary.models.Review;
 import com.example.albumlibrary.repositories.AlbumRepository;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 public class ReviewService {
@@ -50,5 +50,17 @@ public class ReviewService {
 
         var savedReview = reviewRepository.save(review);
         return reviewMapper.toDto(savedReview);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewResponseDto> getReviewsForAlbum(Long albumId) {
+
+        var album = albumRepository.findById(albumId)
+                .orElseThrow(() -> new EntityNotFoundException("Album o ID " + albumId + " nie istnieje"));
+
+        return album.getReviews()
+                .stream()
+                .map(reviewMapper::toDto)
+                .toList();
     }
 }

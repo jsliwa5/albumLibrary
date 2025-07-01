@@ -50,7 +50,7 @@ public class AlbumController {
 
     @GetMapping("/{id}/reviews")
     public List<ReviewResponseDto> getReviews(@PathVariable Long id){
-        return albumService.getAllReviews(id);
+        return reviewService.getReviewsForAlbum(id);
     }
 
 }

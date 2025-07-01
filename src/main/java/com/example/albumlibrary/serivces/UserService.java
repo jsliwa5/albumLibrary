@@ -1,9 +1,12 @@
 package com.example.albumlibrary.serivces;
 
-import com.example.albumlibrary.dtos.UserRequestDto;
+import com.example.albumlibrary.dtos.AuthRequestDto;
 import com.example.albumlibrary.models.UserEntity;
 import com.example.albumlibrary.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,19 +20,19 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationProvider authenticationProvider;
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository){
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       AuthenticationProvider authenticationProvider) {
+
         this.userRepository = userRepository;
-    }
-
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder){
         this.passwordEncoder = passwordEncoder;
+        this.authenticationProvider = authenticationProvider;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -42,16 +45,27 @@ public class UserService implements UserDetailsService {
                 List.of(new SimpleGrantedAuthority("user")));
     }
 
-    public UserEntity addUser(UserRequestDto userRequestDto) {
+    public UserEntity addUser(AuthRequestDto authRequestDto) {
         var user = new UserEntity();
-        user.setUsername(userRequestDto.getUsername());
-        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        user.setUsername(authRequestDto.getUsername());
+        user.setPassword(passwordEncoder.encode(authRequestDto.getPassword()));
 
         return userRepository.save(user);
     }
 
     public UserEntity getUserByUsername(String username){
         return userRepository.findUserEntityByUsername(username);
+    }
+
+    public UserEntity authenticate(AuthRequestDto authRequestDto) {
+        authenticationProvider.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authRequestDto.getUsername(),
+                        authRequestDto.getPassword()
+                )
+        );
+
+        return userRepository.findUserEntityByUsername(authRequestDto.getUsername());
     }
 
 
