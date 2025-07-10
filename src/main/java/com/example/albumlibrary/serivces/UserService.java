@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService {
 
         return new User(user.getUsername(),
                 user.getPassword(),
-                List.of(new SimpleGrantedAuthority("user")));
+                List.of(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
     public UserEntity addUser(AuthRequestDto authRequestDto) {

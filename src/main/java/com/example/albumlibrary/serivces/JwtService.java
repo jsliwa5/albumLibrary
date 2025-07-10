@@ -1,4 +1,4 @@
-package com.example.albumlibrary.jwt;
+package com.example.albumlibrary.serivces;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

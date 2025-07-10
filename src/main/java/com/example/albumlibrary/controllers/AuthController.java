@@ -2,7 +2,7 @@ package com.example.albumlibrary.controllers;
 
 import com.example.albumlibrary.dtos.AuthRequestDto;
 import com.example.albumlibrary.dtos.AuthResponseDto;
-import com.example.albumlibrary.jwt.JwtService;
+import com.example.albumlibrary.serivces.JwtService;
 import com.example.albumlibrary.models.UserEntity;
 import com.example.albumlibrary.serivces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
