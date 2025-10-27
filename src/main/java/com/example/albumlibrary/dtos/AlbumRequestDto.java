@@ -9,6 +9,7 @@ import java.util.List;
 public class AlbumRequestDto {
 
     public String name;
-    public List<Artist> otherArtists;
+    public List<Long> artistsIds;
+    public String imageUrl;
 
 }

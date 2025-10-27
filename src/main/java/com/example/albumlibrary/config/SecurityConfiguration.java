@@ -34,16 +34,17 @@ public class SecurityConfiguration {
     private final UserService userService;
     private final JwtService jwtService;
     private final HandlerExceptionResolver handlerExceptionResolver;
-    private final ApiKeyAuthFilter apiKeyAuthFilter;
+    //private final ApiKeyAuthFilter apiKeyAuthFilter;
 
     public SecurityConfiguration(@Lazy UserService userService,
                                  JwtService jwtService,
-                                 HandlerExceptionResolver handlerExceptionResolver,
-                                 ApiKeyAuthFilter apiKeyAuthFilter) {
+                                 HandlerExceptionResolver handlerExceptionResolver
+                                 //ApiKeyAuthFilter apiKeyAuthFilter
+    ) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.handlerExceptionResolver = handlerExceptionResolver;
-        this.apiKeyAuthFilter = apiKeyAuthFilter;
+        //this.apiKeyAuthFilter = apiKeyAuthFilter;
     }
 
     @Bean
@@ -51,6 +52,7 @@ public class SecurityConfiguration {
         http
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/albums/**", "/artists/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/albums/**", "/artists/**").hasRole("USER")
                         .requestMatchers("/auth/**").permitAll()
@@ -61,8 +63,8 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider(passwordEncoder()))
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(apiKeyAuthFilter, JwtAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                //.addFilterBefore(apiKeyAuthFilter, JwtAuthenticationFilter.class);
 
 
         return http.build();

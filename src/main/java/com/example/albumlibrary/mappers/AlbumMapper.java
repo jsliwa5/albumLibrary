@@ -25,6 +25,7 @@ public class AlbumMapper  {
 
         dto.setAlbumId(entity.getAlbum_id());
         dto.setName(entity.getName());
+        dto.setImageUrl(entity.getImageUrl());
 
         if(entity.getArtists() != null){
             Set<ArtistResponseDto> artists = entity.getArtists()

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/albums")
 public class AlbumController {
@@ -38,8 +39,8 @@ public class AlbumController {
     }
 
     @PostMapping
-    public AlbumResponseDto addAlbum(@RequestBody Album album) {
-        return albumService.addAlbum(album);
+    public AlbumResponseDto addAlbum(@RequestBody AlbumRequestDto albumDto) {
+        return albumService.addAlbum(albumDto);
     }
 
 
@@ -51,6 +52,11 @@ public class AlbumController {
     @GetMapping("/{id}/reviews")
     public List<ReviewResponseDto> getReviews(@PathVariable Long id){
         return reviewService.getReviewsForAlbum(id);
+    }
+
+    @GetMapping("/recommended")
+    public List<AlbumResponseDto> getRecommendedAlbums(@RequestParam int howMany){
+        return albumService.getRecommendedAlbums(howMany);
     }
 
 }

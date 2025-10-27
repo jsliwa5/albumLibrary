@@ -3,6 +3,8 @@ package com.example.albumlibrary.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 import java.util.Set;
 
 
@@ -23,10 +25,17 @@ public class Album {
     @JsonIgnore
     private Set<Artist> artists;
 
-    private String name;
-
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private Set<Review> reviews;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    private List<Track> trackList;
+
+    private String imageUrl;
+    private String name;
+    private String description;
+    private String genre;
+
 
 
 }

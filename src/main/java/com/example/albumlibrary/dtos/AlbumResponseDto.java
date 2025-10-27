@@ -11,4 +11,5 @@ public class AlbumResponseDto {
     private long albumId;
     private String name;
     private Set<ArtistResponseDto> artists;
+    private String imageUrl;
 }
